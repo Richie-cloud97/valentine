@@ -73,7 +73,7 @@
 
   // When Yes is clicked, show your picture
   yesBtn.addEventListener('click', () => {
-    surpriseImg.src = 'https://your-image-url-here.com/picture.jpg'; // <-- replace with your picture URL
+    surpriseImg.src = 'https://media1.tenor.com/m/F4QdS7YKKv4AAAAC/praying-cat.gif'; // <-- replace with your picture URL
     surpriseImg.style.display = 'block';
   });
 
