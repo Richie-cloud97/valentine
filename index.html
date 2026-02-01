@@ -31,6 +31,7 @@
     gap: 2rem;
     margin-top: 2rem;
     position: relative;
+    height: 60px; /* space for buttons */
   }
 
   button {
@@ -46,12 +47,16 @@
   .yes-btn {
     background-color: #ff69b4;
     color: #fff;
+    position: relative;
   }
 
   .no-btn {
     background-color: #fff;
     color: #ff69b4;
-    position: relative; /* starts side by side */
+    position: absolute; /* always absolute for movement */
+    top: 0;
+    left: 180px; /* start beside the Yes button */
+    z-index: 10;
   }
 
   img {
@@ -144,7 +149,6 @@
       confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
       document.body.appendChild(confetti);
 
-      // Animate confetti
       const fallDuration = Math.random() * 3 + 2; // 2-5 sec
       confetti.animate([
         { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
@@ -155,16 +159,19 @@
         easing: 'ease-out'
       });
 
-      // Remove confetti after animation
       setTimeout(() => confetti.remove(), fallDuration * 1000);
     }
   });
 
   // No button runaway
   noBtn.addEventListener('mouseover', () => {
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    noBtn.style.position = 'absolute';
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+
+    // Keep the button fully inside viewport
+    const x = Math.random() * (window.innerWidth - btnWidth);
+    const y = Math.random() * (window.innerHeight - btnHeight);
+
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
   });
