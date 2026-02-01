@@ -16,6 +16,8 @@
     background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
     text-align: center;
     color: #fff;
+    overflow: hidden;
+    position: relative;
   }
 
   h1 {
@@ -38,6 +40,7 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s;
+    z-index: 10;
   }
 
   .yes-btn {
@@ -48,7 +51,7 @@
   .no-btn {
     background-color: #fff;
     color: #ff69b4;
-    position: absolute;
+    position: relative; /* starts side by side */
   }
 
   img {
@@ -56,6 +59,60 @@
     max-width: 80%;
     border-radius: 12px;
     box-shadow: 0 0 20px #ff69b4;
+  }
+
+  /* Falling hearts */
+  .heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    transform: rotate(45deg);
+    left: 0;
+    top: 0;
+    animation: fall linear infinite;
+  }
+
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+  }
+
+  .heart::before {
+    top: -10px;
+    left: 0;
+  }
+
+  .heart::after {
+    left: 10px;
+    top: 0;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(-50px) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(45deg);
+      opacity: 0;
+    }
+  }
+
+  /* Confetti pieces */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: yellow;
+    opacity: 0.8;
+    z-index: 20;
+    border-radius: 3px;
   }
 </style>
 </head>
@@ -66,24 +123,63 @@
     <button class="no-btn">No</button>
   </div>
   <img id="surprise" src="" style="display:none;" alt="Surprise Picture">
+
 <script>
   const yesBtn = document.querySelector('.yes-btn');
   const noBtn = document.querySelector('.no-btn');
   const surpriseImg = document.getElementById('surprise');
 
-  // When Yes is clicked, show your picture
+  // Yes button click
   yesBtn.addEventListener('click', () => {
-    surpriseImg.src = 'https://media1.tenor.com/m/F4QdS7YKKv4AAAAC/praying-cat.gif'; // <-- replace with your picture URL
+    // Show picture
+    surpriseImg.src = 'https://media.tenor.com/KzRk6gKYpfMAAAAi/cat.gif'; // <-- replace with your picture
     surpriseImg.style.display = 'block';
+
+    // Launch confetti
+    for (let i = 0; i < 100; i++) {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = Math.random() * window.innerWidth + 'px';
+      confetti.style.top = Math.random() * window.innerHeight + 'px';
+      confetti.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      document.body.appendChild(confetti);
+
+      // Animate confetti
+      const fallDuration = Math.random() * 3 + 2; // 2-5 sec
+      confetti.animate([
+        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random()*360}deg)`, opacity: 0 }
+      ], {
+        duration: fallDuration * 1000,
+        iterations: 1,
+        easing: 'ease-out'
+      });
+
+      // Remove confetti after animation
+      setTimeout(() => confetti.remove(), fallDuration * 1000);
+    }
   });
 
-  // Make No button run away
+  // No button runaway
   noBtn.addEventListener('mouseover', () => {
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.position = 'absolute';
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
   });
+
+  // Falling hearts continuously
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000);
+  }
+  setInterval(createHeart, 300);
 </script>
 </body>
 </html>
