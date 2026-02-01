@@ -131,12 +131,21 @@ let chaos = 0;
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 
-// YES follows cursor
+// YES smoothly follows cursor without disappearing
+let yesX = window.innerWidth / 2 - yesBtn.offsetWidth/2;
+let yesY = window.innerHeight / 2 - yesBtn.offsetHeight/2;
+yesBtn.style.left = yesX + "px";
+yesBtn.style.top = yesY + "px";
+
 document.addEventListener("mousemove", e => {
-  const r = yesBtn.getBoundingClientRect();
-  yesBtn.style.left = r.left + (e.clientX - r.left - r.width/2)*0.04 + "px";
-  yesBtn.style.top  = r.top  + (e.clientY - r.top  - r.height/2)*0.04 + "px";
+  const targetX = e.clientX - yesBtn.offsetWidth/2;
+  const targetY = e.clientY - yesBtn.offsetHeight/2;
+  yesX += (targetX - yesX) * 0.08; // smoothing factor
+  yesY += (targetY - yesY) * 0.08;
+  yesBtn.style.left = yesX + "px";
+  yesBtn.style.top = yesY + "px";
 });
+
 
 // NO panics → spins → disappears
 function noPanic() {
